@@ -1,9 +1,10 @@
-from src.views import session
+from src.views import session, dashboard, add
 from src.queries import (
     get_info,
 )
 
 import streamlit as st
+
 
 def main():
     if "user_id" not in st.session_state:
@@ -13,11 +14,15 @@ def main():
         session.render()
     else:
         st.sidebar.title("Menú Principal")
-        menu = st.sidebar.radio("Ir a:",
-                                options=["Dashboard", "Añadir Comida", "Mi Perfil"])
+        menu = st.sidebar.radio(
+            "Ir a:", options=["Dashboard", "Añadir Comida", "Mi Perfil"]
+        )
 
         if menu == "Dashboard":
             dashboard.render()
+        elif menu == "Añadir Comida":
+            add.render()
+
 
 if __name__ == "__main__":
     main()

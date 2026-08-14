@@ -7,7 +7,7 @@ logging.basicConfig(
     filename=LOG_FILE,
     level=logging.INFO,
     format="[%(asctime)s] | %(levelname)-8s | %(name)s | %(filename)s:%(funcName)s:%(lineno)d | PID:%(process)d | THREAD:%(threadName)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
 logger = logging.getLogger("macro_tracker")

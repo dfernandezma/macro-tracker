@@ -8,12 +8,8 @@ if str(ROOT_DIR) not in sys.path:
 
 from src.constants import MAP_ACTIVITY_NUM
 
-def calculate_bmr(
-        sex: str,
-        age: int,
-        weight: float,
-        height: float
-    ) -> float:
+
+def calculate_bmr(sex: str, age: int, weight: float, height: float) -> float:
     if sex == "Hombre":
         bmr = 10 * weight + 6.25 * height - 5 * age + 5
     else:
@@ -21,11 +17,8 @@ def calculate_bmr(
 
     return bmr
 
-def calculate_kcal(
-        objective: str,
-        bmr: float,
-        activity: str
-    ) -> float:
+
+def calculate_kcal(objective: str, bmr: float, activity: str) -> float:
     tdee = bmr * MAP_ACTIVITY_NUM[activity]
 
     if objective == "Ganar masa muscular":
@@ -35,35 +28,25 @@ def calculate_kcal(
     else:
         return tdee
 
-def calculate_protein(
-        objective: str,
-        weight: float
-    ) -> float:
+
+def calculate_protein(objective: str, weight: float) -> float:
     if objective == "Ganar masa muscular":
         return weight * 2
     else:
         return weight * 2.5
 
-def calculate_fat(
-        kcal: float
-    ) -> float:
+
+def calculate_fat(kcal: float) -> float:
     return 0.3 * kcal / 9
 
-def calculate_carb(
-        kcal: float,
-        protein: float,
-        fat: float
-    ) -> float:
+
+def calculate_carb(kcal: float, protein: float, fat: float) -> float:
     return (kcal - protein * 4 - fat * 9) / 4
 
+
 def calculate(
-        sex: str,
-        age: int,
-        height: int,
-        weight: float,
-        activity: str,
-        objective: str
-    ) -> list[float, float, float, float]:
+    sex: str, age: int, height: int, weight: float, activity: str, objective: str
+) -> list[float, float, float, float]:
     bmr = calculate_bmr(sex, age, weight, height)
     kcal = calculate_kcal(objective, bmr, activity)
     protein = calculate_protein(objective, weight)
