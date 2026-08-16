@@ -1,4 +1,4 @@
-from src.views import session, dashboard, add
+from src.views import session, dashboard, add, user
 from src.queries import (
     get_info,
 )
@@ -22,6 +22,8 @@ def main():
             dashboard.render()
         elif menu == "Añadir Comida":
             add.render()
+        else:
+            user.render()
 
 
 if __name__ == "__main__":

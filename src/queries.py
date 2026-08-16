@@ -14,7 +14,7 @@ import datetime
 import pandas as pd
 
 
-def get_info(user_id: int) -> list[float, float, float, float]:
+def get_user_info(user_id: int) -> list[float, float, float, float]:
 
     try:
         with connect_db() as connection:
@@ -32,8 +32,40 @@ def get_info(user_id: int) -> list[float, float, float, float]:
 
                 if result is None:
                     logger.warning(
-                        f"Error al obtener detalles del usuario ({user_id})."
+                        f"No se pudo obtener los detalles del usuario (ID: {user_id})."
                     )
+                    return None
+
+                sex, age, height, weight, activity, objective = result
+
+                weight = float(weight)
+
+                return (sex, age, height, weight, activity, objective)
+
+    except Exception as e:
+        logger.error(
+            f"Error al obtener información de usuario (ID: {user_id}). Detalle: {e}"
+        )
+        return None
+
+
+def get_info(user_id: int) -> list[float, float, float, float]:
+
+    try:
+        with connect_db() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT sexo, edad, altura_cm, peso_kg, nivel_actividad, objetivo
+                    FROM usuarios
+                    WHERE id = %s;
+                """,
+                    (user_id,),
+                )
+
+                result = get_user_info(user_id)
+
+                if result is None:
                     return None
 
                 sex, age, height, weight, activity, objective = result
@@ -183,3 +215,44 @@ def add_food(user_id: int, food_id: int, amount: float, date: datetime) -> int |
             f"Error insertando registro diario (usuario: {user_id}). Detalle: {e}"
         )
         return None
+
+
+def modify_user(
+    user_id: int,
+    age: int,
+    sex: str,
+    height: int,
+    weight: float,
+    activity: str,
+    objective: str,
+) -> int | None:
+
+    try:
+        with connect_db() as connection:
+            with connection.cursor() as cursor:
+                query = """
+                    UPDATE usuarios
+                    SET 
+                        edad = %s,
+                        sexo = %s,
+                        altura_cm = %s,
+                        peso_kg = %s,
+                        nivel_actividad = %s,
+                        objetivo = %s
+                    WHERE id = %s
+                    RETURNING id;
+                """
+                cursor.execute(
+                    query, (age, sex, height, weight, activity, objective, user_id)
+                )
+                modified_id = cursor.fetchone()[0]
+                if modified_id is None:
+                    logger.warning(
+                        f"No se pudo modificar la información de perfil (ID: {user_id})"
+                    )
+                    return None
+                return modified_id
+    except Exception as e:
+        logger.error(
+            f"Error al intentar modificar usuario (ID: {user_id}). Detalle: {e}"
+        )

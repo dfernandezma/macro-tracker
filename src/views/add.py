@@ -51,3 +51,5 @@ def render():
                     st.caption(
                         "Error en el sistema, no se pudo insertar la comida. Inténtelo de nuevo más adelante..."
                     )
+                else:
+                    st.success("¡Comida añadida correctamente!")
